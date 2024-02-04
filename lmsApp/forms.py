@@ -218,10 +218,13 @@ class UserForm(forms.Form):
     address = forms.Textarea()
     status = forms.CharField(max_length=2)
     user_type= forms.CharField(max_length=15)
+    created_at = forms.DateTimeField(required=False)
     class Meta:
         model = models.Students
         fields = ('code', 'first_name', 'middle_name', 'last_name', 'gender', 'contact', 'email', 'address', 'department', 'course', 'status', )
-
+    def clean_created_at(self):
+        created_at = datetime.datetime.now()
+        return created_at
 class SaveBorrow(forms.ModelForm):
     student = forms.CharField(max_length=250)
     book = forms.CharField(max_length=250)

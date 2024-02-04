@@ -18,7 +18,7 @@
             <dt>Course</dt>
             <dd class="ps-4">{{student.course}}</dd>
             <dt>Name</dt>
-            <dd class="ps-4">{{student.name}}</dd>
+            <dd class="ps-4">{{student.first_name}} {{student.last_name}}</dd>
             <dt>Gender</dt>
             <dd class="ps-4">{{student.gender}}</dd>
             <dt>Contact #</dt>
@@ -33,6 +33,8 @@
                 <span class="badge badge-success bg-gradient bg-success px-3 rounded-pill bg-opacity-75 text-sm py-1">Active</span> {% else %}
                 <span class="badge badge-secondary bg-gradient bg-secondary px-3 rounded-pill bg-opacity-75 text-sm py-1">Inactive</span> {% endif %}
             </dd>
+            <dt>User Type</dt>
+            <dd class="ps-4">{{student.user_type}}</dd>
         </dl>
     </div>
 </div>

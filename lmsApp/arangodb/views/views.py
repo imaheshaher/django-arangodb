@@ -37,3 +37,19 @@ def serialize_to_json(items):
     # Serialize the list of documents to JSON format
     json_data = json.dumps([item._createDict() for item in items], default=str)
     return json_data
+
+def create_collections(collection_name):
+        collection = db.create_collection(collection_name)
+        print(f"Collection '{collection_name}' created with id: {collection.id}")
+def get_paginated_data(collection_name,limit,offset):
+    query = f"""
+        FOR doc IN {collection_name}
+        LIMIT {limit}
+        OFFSET {offset}
+        RETURN doc
+    """
+
+    cursor = db.aql.execute(query)
+    items = list(cursor)
+
+    return items

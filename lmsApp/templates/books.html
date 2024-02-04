@@ -35,7 +35,7 @@
                         <tbody>
                             {% for book in books %}
                             <tr>
-                                {%  underscoreTag book '_key' as id %}{{id}}
+                                {%  underscoreTag book '_key' as id %}
                                 <td class="text-center">{{ forloop.counter }}</td>
                                 <td>{{ book.date_published}}</td>
                                 <td>

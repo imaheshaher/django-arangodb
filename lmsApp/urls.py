@@ -59,4 +59,8 @@ urlpatterns = [
 
     path('create_student/', marklogic_view.create_student_view, name='create_student'),
     path('list_students/', marklogic_view.list_students_view, name='list_students'),
+    path('insert_dummy/', views.insert_dummy_data, name='insert_dummy'),
+    path('create_collection/', views.create_arango_collections, name='create_collection'),
+    
+    
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

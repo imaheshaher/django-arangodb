@@ -10,8 +10,9 @@
 </style>
 <div class="container-fluid">
     <form action="" id="book-form">
-        {%  underscoreTag book '_key' as id %}{{id}}
-
+        <div class=".d-none">
+        {%  underscoreTag book '_key' as id %}
+        </div>
         <input type="hidden" name="id" value="{{id}}">
         <div class="mb-3">
             <label for="isbn" class="control-label">ISBN</label>

@@ -1,4 +1,5 @@
 {% load static %}
+ {% load tagger %} 
 <style>
     #student-img {
         max-width: 100%;
@@ -9,7 +10,9 @@
 </style>
 <div class="container-fluid">
     <form action="" id="student-form">
-        <input type="hidden" name="id" value="{{student.id}}">
+        {%  underscoreTag student '_key' as id %}{{id}}
+
+        <input type="hidden" name="id" value="{{id}}">
         <input type="hidden" name="code" value="generate_code">
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-sm-12">
