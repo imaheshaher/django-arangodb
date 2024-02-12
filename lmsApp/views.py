@@ -8,7 +8,7 @@ from lmsApp import models, forms
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from lmsApp.arangodb.views.views import create_item, get_item_by_id, update_item_by_id,delete_item_by_id,get_all_items,serialize_to_json,create_collections
+from lmsApp.arangodb.views.views import create_item, get_item_by_id, update_item_by_id,delete_item_by_id,get_all_items,serialize_to_json,create_collections,get_paginated_data
 from lmsApp.script.insert_category import insert_data_from_json,insert_book_data
 def context_data(request):
     fullpath = request.get_full_path()
@@ -395,12 +395,14 @@ def books(request):
     context['page'] =  'book'
     context['page_title'] = "Book List"
     # context['books'] = models.Books.objects.filter(delete_flag = 0).all()
-    limit_per_page = 10
+    limit_per_page = 100
     page_number = 1  # Change this based on the desired page number
 
     offset = (page_number - 1) * limit_per_page
-
-    context['books'] = get_all_items('Books')
+    listdata = []
+    for i in range(20):
+        listdata = listdata + list(get_paginated_data('Books',limit_per_page,offset=offset))
+    context['books'] = listdata
     return render(request, 'books.html', context)
 
 @login_required
@@ -490,7 +492,6 @@ def save_student(request):
 
         if form.is_valid():
             data = form.cleaned_data
-            print(post['id'],"post")
             if post['id'] == '' or post['id'] == 'None':
                 create_item('Users',data)
                 messages.success(request, "Student has been saved successfully.")

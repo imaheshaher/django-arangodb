@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from PIL import Image
 from django.contrib.auth.models import User
 from django.contrib.auth.base_user import BaseUserManager
-
+from django.conf import settings
 
 
 # Create your models here.
