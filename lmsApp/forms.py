@@ -174,7 +174,12 @@ class SaveBook(forms.ModelForm):
         except:
             return isbn
         raise forms.ValidationError("ISBN already exists on the Database.")
-  
+
+class SaveSupplier(forms.Form):
+    name=forms.CharField(max_length=250)
+    office_address=forms.CharField(max_length=250)
+    mobile_no=forms.CharField(max_length=250)
+    email_id=forms.CharField(max_length=250)
 class SaveStudent(forms.ModelForm):
     code = forms.CharField(max_length=250)
     first_name = forms.CharField(max_length=250)

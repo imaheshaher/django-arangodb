@@ -32,10 +32,18 @@ urlpatterns = [
     path('save_category',views.save_category,name='save-category'),
     path('delete_category/<str:pk>',views.delete_category,name='delete-category'),
     path('sub_category',views.sub_category,name='sub_category-page'),
+    path('supplier',views.supplier_list,name='supplier'),
+    
     path('manage_sub_category',views.manage_sub_category,name='manage-sub_category'),
+    path('manage_supplier',views.manage_supplier,name='manage_supplier'),
+    path('manage_supplier/<int:pk>',views.manage_supplier,name='manage-supplier-pk'),
+    
+
     path('manage_sub_category/<int:pk>',views.manage_sub_category,name='manage-sub_category-pk'),
     path('view_sub_category/<int:pk>',views.view_sub_category,name='view-sub_category-pk'),
     path('save_sub_category',views.save_sub_category,name='save-sub_category'),
+    path('save_sub_supplier',views.save_supplier,name='save_sub_supplier'),
+    
     path('delete_sub_category/<int:pk>',views.delete_sub_category,name='delete-sub_category'),
     path('books',views.books,name='book-page'),
     path('manage_book',views.manage_book,name='manage-book'),

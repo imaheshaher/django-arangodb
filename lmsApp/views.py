@@ -255,11 +255,9 @@ def save_category(request):
     if request.method == 'POST':
         form = forms.SaveCategory(request.POST)        
         if form.is_valid():
+            print(request.POST,"request.POST")
             data = form.cleaned_data
-            print('data: ', data);
             category_id = request.POST.get('id', '')
-            print('category_id: ', category_id);
-            
             if category_id:
                 update_item_by_id('Category', category_id, data)  # Update the existing document
                 messages.success(request, "Category has been updated successfully.")
@@ -280,7 +278,6 @@ def save_category(request):
     return HttpResponse(json.dumps(resp), content_type="application/json")
 @login_required
 def view_category(request, pk = None):
-    print('pk: ', pk);
     context = context_data(request)
     context['page'] = 'view_category'
     context['page_title'] = 'View Category'
@@ -325,6 +322,22 @@ def sub_category(request):
     context['page_title'] = "Sub Category List"
     context['sub_category'] = get_all_items('SubCategory')
     return render(request, 'sub_category.html', context)
+
+@login_required
+def sub_category(request):
+    context = context_data(request)
+    context['page'] = 'sub_category'
+    context['page_title'] = "Sub Category List"
+    context['sub_category'] = get_all_items('SubCategory')
+    return render(request, 'sub_category.html', context)
+
+@login_required
+def supplier_list(request):
+    context = context_data(request)
+    context['page'] = 'supplier'
+    context['page_title'] = "Supplier List"
+    context['supplier'] = get_all_items('Supplier')
+    return render(request, 'supplier.html', context)
 
 @login_required
 def save_sub_category(request):
@@ -373,6 +386,17 @@ def manage_sub_category(request, pk = None):
         context['sub_category'] = get_item_by_id('SubCategory',pk)
     context['categories'] = models.Category.objects.filter(delete_flag = 0, status = 1).all()
     return render(request, 'manage_sub_category.html', context)
+
+@login_required
+def manage_supplier(request, pk = None):
+    context = context_data(request)
+    context['page'] = 'manage_supplier'
+    context['page_title'] = 'Manage Supplier'
+    if pk is None:
+        context['supplier'] = {}
+    else:
+        context['supplier'] = get_item_by_id('Supplier',pk)
+    return render(request, 'manage_supplier.html', context)
 
 @login_required
 def delete_sub_category(request, pk = None):
@@ -556,7 +580,7 @@ def borrows(request):
     context = context_data(request)
     context['page'] = 'borrow'
     context['page_title'] = "Borrowing Transaction List"
-    context['borrows'] = models.Borrow.objects.order_by('status').all()
+    context['borrows'] = []
     return render(request, 'borrows.html', context)
 
 @login_required
@@ -628,6 +652,30 @@ def delete_borrow(request, pk = None):
 
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
+def save_supplier(request):
+    resp = { 'status': 'failed', 'msg' : '' }
+    if request.method == 'POST':
+        post = request.POST
+        form = forms.SaveSupplier(request.POST) 
+        if form.is_valid():
+            data = form.cleaned_data
+            if post['id'] == '':
+                create_item('Supplier',data)
+                messages.success(request, "Supplier has been saved successfully.")
+            else:
+                update_item_by_id('Supplier',post['id'],data)
+                messages.success(request, "Supplier has been updated successfully.")
+            resp['status'] = 'success'
+        else:
+            for field in form:
+                for error in field.errors:
+                    if not resp['msg'] == '':
+                        resp['msg'] += str('<br/>')
+                    resp['msg'] += str(f'[{field.name}] {error}')
+    else:
+         resp['msg'] = "There's no data sent on the request"
+
+    return HttpResponse(json.dumps(resp), content_type="application/json")
 
 def insert_dummy_data(request):
     message = request.GET.get('message')

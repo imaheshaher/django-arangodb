@@ -39,21 +39,24 @@
                         <a class="nav-link" aria-current="page" href="{% url 'category-page' %}">Categories</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'sub_category-page' %}">Sub Categories</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'supplier' %}">supplier</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{% url 'book-page' %}">Books</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'student-page' %}">Students</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'student-page' %}">Users</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{% url 'borrow-page' %}">Borrowing Transactions</a>
                     </li>
-                    {% if request.user.is_superuser %}
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'user-page' %}">Users</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'borrow-page' %}">Journal</a>
                     </li>
+                    {% if request.user.is_superuser %}
+                    {% comment %} <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{% url 'user-page' %}">Users</a>
+                    </li> {% endcomment %}
                     {% endif %}
                     {% endif %}
                 </ul>
@@ -61,7 +64,7 @@
                 <ul class="navbar-nav d-flex flex-row">
                     {% if user.id %}
                     <li class="nav-item">
-                        <a class="nav-link"  href="{% url 'profile-page' %}"><b>Howdy, {{user.username}}</b></a>
+                        <a class="nav-link"  href="{% url 'profile-page' %}"><b> {{user.username}}</b></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{% url 'logout' %}">Logout</a>
