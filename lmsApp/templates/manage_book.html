@@ -28,9 +28,9 @@
                 {% endif %}
                 {% for sub_category in sub_categories %}
                 {% if  book.sub_category == sub_category.name %}
-                    <option value="{{sub_category.name}}" selected>{{sub_category.category}} - {{sub_category.name}}</option>
+                    <option value="{{sub_category.name}}" selected>{{sub_category.name}}</option>
                 {% else %}
-                    <option value="{{sub_category.name}}">{{sub_category.category}} - {{sub_category.name}}</option>
+                    <option value="{{sub_category.name}}">{{sub_category.name}}</option>
                 {% endif %}
                 {% endfor %}
             </select>

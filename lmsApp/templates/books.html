@@ -46,7 +46,7 @@
                                 <td>{{ book.isbn}}</td>
                                 <td>{{ book.title }}</td>
                                 <td class="text-center">
-                                    {% if book.status == '1' %}
+                                    {% if book.status == '1' or book.status == 1 %}
                                     <span class="badge badge-success bg-gradient bg-success px-3 rounded-pill bg-opacity-75 text-sm py-1">Active</span> {% else %}
                                     <span class="badge badge-secondary bg-gradient bg-secondary px-3 rounded-pill bg-opacity-75 text-sm py-1">Inactive</span> {% endif %}
                                 </td>

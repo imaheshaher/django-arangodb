@@ -22,7 +22,12 @@ def insert_data_from_json(file_path):
         
         data = json.load(file)
         for entry in data:
-            create_item('Category',entry)
+            row = {
+                "name": entry["name"],
+                "description": entry["description"],
+                "status": '1'  # Add your status logic here
+            }
+            create_item('Category',row)
 
 # if __name__ == "__main__":
 #     json_file_path = 'sub_category.json'
@@ -42,8 +47,52 @@ def insert_book_data(file_path):
                 "author": row["authors"],
                 "publisher": row["publisher"],
                 "date_published": row["publication_date"],
-                "status": 1  # Add your status logic here
+                "status": '1'  # Add your status logic here
             }
 
             # Insert data into ArangoDB collection
             create_item('Books',data)
+
+
+def insert_user_data(file_path):
+    full_path = os.path.join(current_directory,'lmsApp','script', file_path)
+    
+    with open(full_path, newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            # Map CSV fields to ArangoDB collection fields
+            data = {
+
+                "code": row['User Id'],
+                "first_name": row['First Name'],
+                "last_name": row['Last Name'],
+                "gender": 'Male',
+                "contact": row['Phone'],
+                "email": row['Email'],
+                "department": row['Department'],
+                "course": 'Computer Science',
+                "address": row['Address'],
+                "status": '1',
+                "user_type": row['User Type'],
+            }
+            # Insert data into ArangoDB collection
+            create_item('Users',data)
+
+
+def insert_supplier_data(file_path):
+    full_path = os.path.join(current_directory, 'lmsApp', 'script', file_path)
+
+    with open(full_path, newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            # Map CSV fields to ArangoDB collection fields
+            data = {
+                "supplier_no": row["Supplierno"],
+                "name": row["Name"],
+                "office_address": row["Address"],
+                "mobile_no": row["Mobile No"],
+                "email_id": row["Email"],
+
+            }
+            # Insert data into ArangoDB collection
+            create_item('Supplier', data)

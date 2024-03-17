@@ -44,8 +44,40 @@ def create_collections(collection_name):
 def get_paginated_data(collection_name,limit,offset):
     aql_query = f"""
     FOR doc IN {collection_name}
+    SORT doc._key ASC
     LIMIT {offset} , {limit}
     RETURN doc
 """
     cursor = db.AQLQuery(aql_query,rawResults=True)
     return cursor
+
+def update_all_status(collection_name, status):
+    aql_query = f"""
+    FOR doc IN {collection_name}
+        UPDATE doc WITH {{ status: {str(status)} }} IN {collection_name}
+    """
+    cursor = db.AQLQuery(aql_query, rawResults=True)
+    return cursor
+def get_count(collection_name, status=None):
+    aql_query=""
+    if status is None:
+        aql_query = f"""
+    RETURN LENGTH(
+        FOR doc IN {collection_name}
+            RETURN doc
+    )
+    """
+        cursor = db.AQLQuery(aql_query, rawResults=True)
+    
+    
+    else:
+        aql_query = f"""
+        RETURN LENGTH(
+            FOR doc IN {collection_name}
+                FILTER doc.status == @status
+                RETURN doc
+        )
+        """
+        cursor = db.AQLQuery(aql_query, bindVars={'status': status}, rawResults=True)
+        
+    return cursor[0] if cursor else 0

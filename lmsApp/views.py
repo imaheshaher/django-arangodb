@@ -8,8 +8,8 @@ from lmsApp import models, forms
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from lmsApp.arangodb.views.views import create_item, get_item_by_id, update_item_by_id,delete_item_by_id,get_all_items,serialize_to_json,create_collections,get_paginated_data
-from lmsApp.script.insert_category import insert_data_from_json,insert_book_data
+from lmsApp.arangodb.views.views import create_item, get_item_by_id, update_item_by_id,delete_item_by_id,get_all_items,serialize_to_json,create_collections,get_paginated_data,update_all_status,get_count
+from lmsApp.script.insert_category import insert_data_from_json,insert_book_data,insert_user_data,insert_supplier_data
 def context_data(request):
     fullpath = request.get_full_path()
     abs_uri = request.build_absolute_uri()
@@ -125,10 +125,10 @@ def home(request):
     context = context_data(request)
     context['page'] = 'home'
     context['page_title'] = 'Home'
-    context['categories'] = models.Category.objects.filter(delete_flag = 0, status = 1).all().count()
+    context['categories'] = get_count('Category','1')
     context['sub_categories'] = models.SubCategory.objects.filter(delete_flag = 0, status = 1).all().count()
-    context['students'] = models.Students.objects.filter(delete_flag = 0, status = 1).all().count()
-    context['books'] = models.Students.objects.filter(delete_flag = 0, status = 1).all().count()
+    context['students'] = get_count('Users',None)
+    context['books'] = get_count('Books','1')
     context['pending'] = models.Borrow.objects.filter(status = 1).all().count()
     context['pending'] = models.Borrow.objects.filter(status = 1).all().count()
     context['transactions'] = models.Borrow.objects.all().count()
@@ -384,7 +384,7 @@ def manage_sub_category(request, pk = None):
         context['sub_category'] = {}
     else:
         context['sub_category'] = get_item_by_id('SubCategory',pk)
-    context['categories'] = models.Category.objects.filter(delete_flag = 0, status = 1).all()
+    context['categories'] = get_all_items('Category')
     return render(request, 'manage_sub_category.html', context)
 
 @login_required
@@ -477,7 +477,7 @@ def manage_book(request, pk = None):
         context['book'] = {}
     else:
         context['book'] = get_item_by_id('Books',pk)
-    context['sub_categories'] = get_all_items('SubCategory')
+    context['sub_categories'] = get_all_items('Category')
     print(context['sub_categories'])
     return render(request, 'manage_book.html', context)
 
@@ -502,10 +502,17 @@ def students(request):
     context['page'] = 'student'
     context['page_title'] = "Student List"
     # context['students'] = models.Students.objects.filter(delete_flag = 0).all()
-    context['students'] = get_all_items('Users')
     
-    
+    limit_per_page = 100
+    page_number = 1  # Change this based on the desired page number
+
+    offset = (page_number - 1) * limit_per_page
+    listdata = []
+    for i in range(20):
+        listdata = listdata + list(get_paginated_data('Users',limit_per_page,offset=offset))
+    context['students'] = listdata
     return render(request, 'students.html', context)
+
 
 @login_required
 def save_student(request):
@@ -679,8 +686,21 @@ def save_supplier(request):
 
 def insert_dummy_data(request):
     message = request.GET.get('message')
-    # insert_data_from_json('sub_category.json')
-    insert_book_data('books.csv')
+    model = request.GET.get('model')
+    collection_name = request.GET.get('collection_name')
+    status = request.GET.get('status')
+    if model == 'book':
+        insert_book_data('books.csv')
+    elif model == 'user':
+        insert_user_data('users.csv')
+    elif model == 'supplier':
+        insert_supplier_data('Supplier.csv')
+    elif model == 'category':
+        insert_data_from_json('sub_category.json')
+   
+    if collection_name: 
+        update_all_status(collection_name,status)  
+        
     return HttpResponse(json.dumps({'category': message}), content_type="application/json")
 
 
